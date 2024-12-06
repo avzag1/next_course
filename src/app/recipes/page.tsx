@@ -38,7 +38,14 @@ export default async function RecipesPage() {
           //     className="mt-4 rounded-lg"
           //   />
           // </li>
-          <RecipeCard key={recipe.id} id={recipe.id} title={recipe.title} description={recipe.description} image={recipe.image}/>
+          <RecipeCard
+            key={recipe.id}
+            id={recipe.id}
+            title={recipe.title}
+            description={recipe.description}
+            image={recipe.image}
+            // showIngredientsBtn
+          />
         ))}
       </ul>
     </div>

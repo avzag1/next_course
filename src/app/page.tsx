@@ -25,7 +25,7 @@ export default async function Home(): Promise<React.JSX.Element> {
     //   {process.env.TOKEN}
     // </div>
     <div className="container mx-auto p-4">
-      <h1 className="text-4xl font-bold">Добро пожаловать на страницук рецептов</h1>
+      <h1 className="text-4xl font-bold">Добро пожаловать на страницу рецептов</h1>
       <p className="mx-4 text-lg mt-4">Делитесь любимыми рецептами и открывайте для себя новые!</p>
 
       <nav className="mt-6">

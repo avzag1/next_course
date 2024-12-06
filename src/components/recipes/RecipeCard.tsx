@@ -5,7 +5,9 @@ import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid"
 import { HeartIcon as OutlineHeartIcon } from "@heroicons/react/24/outline"
 import Image from "next/image"
 import Link from "next/link"
-import IngredientList, {Ingredient} from "@/components/ingredients/IngredientList"
+import IngredientList from "@/components/ingredients/IngredientList"
+
+import { Ingredient } from "@/app/api/ingredients/[id]/route"
 
 interface RecipeCardProps {
   id: number
@@ -31,7 +33,7 @@ const [ingredients, setIngredients] = useState<Ingredient[]>([])
   }
 
   const hideIngredients = () => setShowIngredients(false)
-
+  
     return (
     <li className="border p-4 rounded-lg shadow-lg list-none">
       <Link href={`/recipes/${id}`}>
@@ -52,6 +54,7 @@ const [ingredients, setIngredients] = useState<Ingredient[]>([])
         {liked ? <SolidHeartIcon className="w-6 h-6 text-red-500" /> : <OutlineHeartIcon className="w-6 h-6 text-gray-500" />}
         <span>{liked ? "Вы поставили лайк!" : "Поставить лайк"}</span>
       </button>
+      
       {showIngredients && ingredients.length > 0 && <IngredientList ingredients={ingredients}/>}
       {showIngredientsBtn && (
        <button onClick={!showIngredients ? getIngredients : hideIngredients}>
@@ -60,5 +63,6 @@ const [ingredients, setIngredients] = useState<Ingredient[]>([])
       )}
 
     </li>
+    
   )
 }

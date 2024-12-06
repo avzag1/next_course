@@ -1,6 +1,20 @@
 import { NextResponse } from "next/server"
 
-const recipes = [
+export interface Ingredient {
+  id: number;
+  name: string;
+  amount: string;
+}
+
+export interface Recipe {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  ingredients: Ingredient[];
+}
+
+const recipes: Recipe[] = [
   {
     id: 1,
     title: "Спагетти Карбонара",
