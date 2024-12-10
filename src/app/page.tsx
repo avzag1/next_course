@@ -1,6 +1,7 @@
 import Link from "next/link"
 import type { Metadata } from "next"
 import RecipeCard from "@/components/recipes/RecipeCard"
+import type { Recipe } from "@prisma/client"
 
 export const metadata: Metadata = {
   title: "Книга рецептов",
@@ -21,9 +22,6 @@ export default async function Home(): Promise<React.JSX.Element> {
 
   const recipe: Recipe = await fetchRecipeById()
   return (
-    // <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-    //   {process.env.TOKEN}
-    // </div>
     <div className="container mx-auto p-4">
       <h1 className="text-4xl font-bold">Добро пожаловать на страницу рецептов</h1>
       <p className="mx-4 text-lg mt-4">Делитесь любимыми рецептами и открывайте для себя новые!</p>
@@ -44,7 +42,7 @@ export default async function Home(): Promise<React.JSX.Element> {
               id={dailyRecipe.id}
               title={dailyRecipe.title}
               description={dailyRecipe.description}
-              image={dailyRecipe.image}
+              image={dailyRecipe.imageUrl}
               showIngredientsBtn
             />
           </div>

@@ -3,6 +3,7 @@
 import { useEffect } from "react"
 import { useState } from "react"
 import RecipeCard from "@/components/recipes/RecipeCard"
+import { Recipe } from "@prisma/client"
 
 export default function Recipes() {
 
@@ -84,7 +85,7 @@ export default function Recipes() {
             id={recipe.id}
             title={recipe.title}
             description={recipe.description}
-            image={recipe.image}
+            image={recipe.imageUrl}
             showIngredientsBtn
           />
         ))}
