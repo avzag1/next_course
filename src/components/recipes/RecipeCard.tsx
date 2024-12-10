@@ -6,8 +6,7 @@ import { HeartIcon as OutlineHeartIcon } from "@heroicons/react/24/outline"
 import Image from "next/image"
 import Link from "next/link"
 import IngredientList from "@/components/ingredients/IngredientList"
-
-import { Ingredient } from "@/app/api/ingredients/[id]/route"
+import type { Ingredient } from "@prisma/client"
 
 interface RecipeCardProps {
   id: number
@@ -17,24 +16,30 @@ interface RecipeCardProps {
   showIngredientsBtn?: boolean
 }
 
-export default function RecipeCard({ id, title, description, image, showIngredientsBtn=false }: RecipeCardProps) {
+export default function RecipeCard({ id, title, description, image, showIngredientsBtn = false }: RecipeCardProps) {
   const [liked, setLiked] = useState(false)
-const [showIngredients, setShowIngredients] = useState(false)
-const [ingredients, setIngredients] = useState<Ingredient[]>([])
+  const [showIngredients, setShowIngredients] = useState(false)
+  const [ingredients, setIngredients] = useState<Ingredient[]>([])
   const toggleLike = () => {
     setLiked(!liked)
   }
 
-  const getIngredients = async () =>{
+  const getIngredients = async () => {
     setShowIngredients(true)
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ingredients/${id}`)
     const data = await res.json()
     setIngredients(data)
   }
 
+  const showChief = async () => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/recipes/with-chiefs/${id}`)
+    const data = await res.json()
+    return data
+  }
+
   const hideIngredients = () => setShowIngredients(false)
-  
-    return (
+
+  return (
     <li className="border p-4 rounded-lg shadow-lg list-none">
       <Link href={`/recipes/${id}`}>
         <Image
@@ -46,6 +51,7 @@ const [ingredients, setIngredients] = useState<Ingredient[]>([])
         />
         <h3 className="text-xl font-semibold">{title}</h3>
         <p className="text-sm text-gray-700 mb-4">{description}</p>
+        <div>{showChief}</div>
       </Link>
       <button
         onClick={toggleLike}
@@ -54,15 +60,13 @@ const [ingredients, setIngredients] = useState<Ingredient[]>([])
         {liked ? <SolidHeartIcon className="w-6 h-6 text-red-500" /> : <OutlineHeartIcon className="w-6 h-6 text-gray-500" />}
         <span>{liked ? "Вы поставили лайк!" : "Поставить лайк"}</span>
       </button>
-      
-      {showIngredients && ingredients.length > 0 && <IngredientList ingredients={ingredients}/>}
-      {showIngredientsBtn && (
-       <button onClick={!showIngredients ? getIngredients : hideIngredients}>
-<span>{showIngredients ? "Скрыть ингредиенты" : "Посмотреть ингредиенты"}</span>
-       </button> 
-      )}
 
+      {showIngredients && ingredients.length > 0 && <IngredientList ingredients={ingredients} />}
+      {showIngredientsBtn && (
+        <button onClick={!showIngredients ? getIngredients : hideIngredients}>
+          <span>{showIngredients ? "Скрыть ингредиенты" : "Посмотреть ингредиенты"}</span>
+        </button>
+      )}
     </li>
-    
   )
 }

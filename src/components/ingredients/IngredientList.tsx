@@ -1,17 +1,4 @@
-// export type Ingredient = string
-
-// export default function IngredientList (ingredients: Ingredient[]){
-//   console.log(ingredients);
-//   return (
-    
-//     ingredients.map((item, index)=>(
-//       <li key={index}>{item}</li>
-//     ))
-
-//     )
-// }
-
-import { Ingredient } from "@/app/api/ingredients/[id]/route";
+import { Ingredient } from "@prisma/client";
 
 interface IngredientListProps {
   ingredients: Ingredient[]

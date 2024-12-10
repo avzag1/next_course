@@ -1,5 +1,6 @@
 // import Image from "next/image"
 import RecipeCard from "@/components/recipes/RecipeCard"
+import type { Recipe } from "@prisma/client"
 import Link from "next/link"
 
 // interface Recipe {
@@ -28,7 +29,7 @@ export default async function RecipesPage({ params }: { params: { id: string } }
           id={recipe.id}
           title={recipe.title}
           description={recipe.description}
-          image={recipe.image}
+          image={recipe.imageUrl}
         />
       </ul>
       <div className="mt-8">
