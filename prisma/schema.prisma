@@ -49,7 +49,7 @@ model RecipeTag {
 model Chief {
   id   Int    @id @default(autoincrement())
   name String
-  bio  String
+  bio  String?
   recipes RecipeChief[]
 }
 
