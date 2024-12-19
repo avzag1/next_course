@@ -1,6 +1,11 @@
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 
+const chiefs = [
+  { name: "Chief 1", bio: "Эксперт в итальянской кухне." },
+  { name: "Chief 2", bio: "Мастер пиццы и салатов." },
+]
+
 const recipes = [
   {
     title: "Спагетти Карбонара",
@@ -12,8 +17,9 @@ const recipes = [
       { name: "Пармезан", amount: "50 г" },
       { name: "Бекон", amount: "100 г" },
     ],
-    chief: "chief_1",
-    tag: "A",
+    chiefs: ["Chief 1"],
+    tags: ["Итальянская кухня", "Паста"],
+    rating: 3,
   },
   {
     title: "Пицца Маргарита",
@@ -25,8 +31,9 @@ const recipes = [
       { name: "Моцарелла", amount: "100 г" },
       { name: "Базилик", amount: "по вкусу" },
     ],
-    chief: "chief_2",
-    tag: "B",
+    chiefs: ["Chief 2"],
+    tags: ["Итальянская кухня", "Пицца"],
+    rating: 4,
   },
   {
     title: "Салат Цезарь",
@@ -38,43 +45,86 @@ const recipes = [
       { name: "Соус Цезарь", amount: "30 г" },
       { name: "Пармезан", amount: "20 г" },
     ],
-    chief: "chief_1",
-    tag: "C",
+    chiefs: ["Chief 1"],
+    tags: ["Салат", "Классика"],
+    rating: 5,
   },
 ]
 
 async function main() {
   await prisma.ingredient.deleteMany()
   await prisma.recipe.deleteMany()
+  await prisma.recipeChief.deleteMany()
+  await prisma.recipeTag.deleteMany()
   await prisma.chief.deleteMany()
   await prisma.tag.deleteMany()
 
   for (const recipe of recipes) {
-    await prisma.recipe.create({
-      data: {
-        title: recipe.title,
-        description: recipe.description,
-        imageUrl: recipe.imageUrl,
-        ingredients: {
-          create: recipe.ingredients.map((ingredient) => ({
-            name: ingredient.name,
-            amount: ingredient.amount,
-          })),
+    const createdChiefs: Record<string, number> = {} // Динамический объект для хранения id поваров
+    for (const chief of chiefs) {
+      const createdChief = await prisma.chief.create({
+        data: {
+          name: chief.name,
+          bio: chief.bio,
         },
-        chief: recipe.chief,
-        tag: recipe.tag,
-      },
-    })
+      })
+      createdChiefs[chief.name] = createdChief.id
+    }
+
+    // Создание рецептов
+    for (const recipe of recipes) {
+      // Создание тегов
+      const tags = await Promise.all(
+        recipe.tags.map(async (tagName) => {
+          const existingTag = await prisma.tag.findFirst({
+            where: { name: tagName },
+          })
+
+          if (existingTag) {
+            return existingTag
+          }
+
+          return prisma.tag.create({
+            data: { name: tagName },
+          })
+        })
+      )
+
+      const createdRecipe = await prisma.recipe.create({
+        data: {
+          title: recipe.title,
+          description: recipe.description,
+          imageUrl: recipe.imageUrl,
+          ingredients: {
+            create: recipe.ingredients.map((ingredient) => ({
+              name: ingredient.name,
+              amount: ingredient.amount,
+            })),
+          },
+          tags: {
+            create: recipe.tags.map((tag) => ({
+              tagId: tag.id,
+            })),
+          },
+          chiefs: {
+            create: recipe.chiefs.map((chiefName) => ({
+              chiefId: createdChiefs[chiefName],
+            })),
+          },
+          rating: recipe.rating,
+        },
+      })
+    }
+
+    console.log("Seeding completed.")
   }
 
-  console.log("Seeding completed.")
+  main()
+    .catch((e) => {
+      console.error(e)
+      process.exit(1)
+    })
+    .finally(async () => {
+      await prisma.$disconnect()
+    })
 }
-
-main()
-  .catch((e) => {
-    console.error(e)
-    process.exit(1)
-  })
-  .finally(async () => {
-    await prisma.$disconnect()
-  })

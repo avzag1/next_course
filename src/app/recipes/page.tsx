@@ -33,6 +33,8 @@ export default async function RecipesPage() {
             description={recipe.description}
             image={recipe.imageUrl}
             showIngredientsBtn
+            rating={recipe.rating}
+            cheif={recipe.cheif?.name}
           />
         ))}
       </ul>

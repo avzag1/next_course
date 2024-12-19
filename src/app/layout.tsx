@@ -2,6 +2,9 @@ import type { Metadata } from "next"
 import localFont from "next/font/local"
 import "./globals.css"
 import { NavLinks } from "@/components/NavLinks"
+import MainMenu from "@/components/MainMenu"
+import { ThemeModeScript } from "flowbite-react";
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -25,17 +28,21 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <ThemeModeScript />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <header className="bg-gray-200 text-white p-4">
-<div className="container mx-auto flex justify-between items-center">
+        <header className="bg-gray-200 text-white p-2">
+{/* <div className="container mx-auto flex justify-between items-center">
   <NavLinks/>
-</div>
+</div> */}
+<MainMenu/>
         </header>
         <main className="flex-grow p-4">
         {children}
         </main>
-        <footer className="bg-gray-800 text-white p-4 text-center">
+        <footer className="bg-white dark:bg-gray-800 text-gray-500 dark:text-white p-4 text-center text-balance">
         &copy; 2024 Все права защищены
         </footer>
       </body>
