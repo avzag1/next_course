@@ -6,8 +6,7 @@ import { HeartIcon as OutlineHeartIcon } from "@heroicons/react/24/outline"
 import Image from "next/image"
 import Link from "next/link"
 import IngredientList from "@/components/ingredients/IngredientList"
-import type { Ingredient } from "@prisma/client"
-import type { Chief } from "@prisma/client"
+import type { Ingredient, Chief } from "@prisma/client"
 import RecipeRating from "@/components/recipes/RecipeRating"
 
 interface RecipeCardProps {
@@ -17,10 +16,10 @@ interface RecipeCardProps {
   image: string
   showIngredientsBtn?: boolean
   rating?: number
-  tags?: [string]
+  tags?: string[]
 }
 
-export default function RecipeCard({ id, title, description, image, showIngredientsBtn = false, rating, tags }: RecipeCardProps) {
+export default function RecipeCard({ id, title, description, image, showIngredientsBtn = false, rating = 5, tags = [] }: RecipeCardProps) {
   const [liked, setLiked] = useState(false)
   const [showIngredients, setShowIngredients] = useState(false)
   const [ingredients, setIngredients] = useState<Ingredient[]>([])
@@ -64,10 +63,12 @@ export default function RecipeCard({ id, title, description, image, showIngredie
         />
         <h3 className="text-xl font-semibold text-gray-800 dark:text-white">{title}</h3>
         <p className="text-sm text-gray-700 dark:text-gray-400 mb-4">{description}</p>
-        <p className="text-sm text-gray-700 dark:text-gray-400 mb-4 py-5 bg-yellow-100 "></p>
-        <div>{chiefs.map((chief) => chief.name).join(', ')}</div>
+        <div className="border-b mb-4 border-gray-500"></div>
+        <div className="text-sm text-gray-700 dark:text-gray-400 mb-4">{chiefs.map((chief) => chief.name).join(', ')}</div>
         
-        <RecipeRating />
+        <RecipeRating rating={rating} />
+        <div className="text-sm text-gray-700 dark:text-gray-400 mb-4">Теги: {tags.join(', ')}</div>
+        
       </Link>
       <button
         onClick={toggleLike}
@@ -77,12 +78,14 @@ export default function RecipeCard({ id, title, description, image, showIngredie
         <span className="text-gray-900 dark:text-gray-200">{liked ? "Вы поставили лайк!" : "Поставить лайк"}</span>
       </button>
 
+      <div className="text-sm text-gray-700 dark:text-gray-400 mb-4">
       {showIngredients && ingredients.length > 0 && <IngredientList ingredients={ingredients} />}
       {showIngredientsBtn && (
         <button onClick={!showIngredients ? getIngredients : hideIngredients}>
-          <span>{showIngredients ? "Скрыть ингредиенты" : "Посмотреть ингредиенты"}</span>
+          <span className="font-bold hover:underline">{showIngredients ? "Скрыть ингредиенты" : "Посмотреть ингредиенты"}</span>
         </button>
       )}
+      </div>
     </li>
   )
 }

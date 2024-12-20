@@ -1,14 +1,6 @@
 // import Image from "next/image"
 import RecipeCard from "@/components/recipes/RecipeCard"
-import type { Recipe } from "@prisma/client"
-import type { Metadata } from "next"
-
-// interface Recipe {
-//   id: number
-//   title: string
-//   description: string
-//   image: string
-// }
+import { Recipe } from "../api/recipes/route"
 
 async function fetchRecipes() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/recipes`, { cache: "no-store" })
@@ -19,7 +11,7 @@ async function fetchRecipes() {
 }
 
 export default async function RecipesPage() {
-  const recipes = await fetchRecipes()
+  const recipes: Recipe[] = await fetchRecipes()
   console.log(recipes)
   return (
     <div className="container mx-auto p-4">
@@ -34,7 +26,7 @@ export default async function RecipesPage() {
             image={recipe.imageUrl}
             showIngredientsBtn
             rating={recipe.rating}
-            cheif={recipe.cheif?.name}
+            tags={recipe.tags}
           />
         ))}
       </ul>

@@ -59,65 +59,72 @@ async function main() {
   await prisma.chief.deleteMany()
   await prisma.tag.deleteMany()
 
+  // Создание chiefs
+  const chiefMap: Record<string, number> = {}
+  for (const chief of chiefs) {
+    const createdChief = await prisma.chief.create({
+      data: { name: chief.name, bio: chief.bio },
+    })
+    chiefMap[chief.name] = createdChief.id
+  }
+
+  // Создание тегов
+  const tagMap: Record<string, number> = {}
   for (const recipe of recipes) {
-    const createdChiefs: Record<string, number> = {} // Динамический объект для хранения id поваров
-    for (const chief of chiefs) {
-      const createdChief = await prisma.chief.create({
-        data: {
-          name: chief.name,
-          bio: chief.bio,
-        },
-      })
-      createdChiefs[chief.name] = createdChief.id
+    for (const tagName of recipe.tags) {
+      if (!tagMap[tagName]) {
+        const createdTag = await prisma.tag.create({
+          data: { name: tagName },
+        })
+        tagMap[tagName] = createdTag.id
+      }
     }
+  }
+
+  // for (const recipe of recipes) {
+  //   const createdChiefs: Record<string, number> = {} // Динамический объект для хранения id поваров
+  //   for (const chief of chiefs) {
+  //     const createdChief = await prisma.chief.create({
+  //       data: {
+  //         name: chief.name,
+  //         bio: chief.bio,
+  //       },
+  //     })
+  //     createdChiefs[chief.name] = createdChief.id
+  //   }
 
     // Создание рецептов
-    for (const recipe of recipes) {
-      // Создание тегов
-      const tags = await Promise.all(
-        recipe.tags.map(async (tagName) => {
-          const existingTag = await prisma.tag.findFirst({
-            where: { name: tagName },
-          })
-
-          if (existingTag) {
-            return existingTag
-          }
-
-          return prisma.tag.create({
-            data: { name: tagName },
-          })
-        })
-      )
-
-      const createdRecipe = await prisma.recipe.create({
-        data: {
-          title: recipe.title,
-          description: recipe.description,
-          imageUrl: recipe.imageUrl,
-          ingredients: {
-            create: recipe.ingredients.map((ingredient) => ({
-              name: ingredient.name,
-              amount: ingredient.amount,
-            })),
-          },
-          tags: {
-            create: recipe.tags.map((tag) => ({
-              tagId: tag.id,
-            })),
-          },
-          chiefs: {
-            create: recipe.chiefs.map((chiefName) => ({
-              chiefId: createdChiefs[chiefName],
-            })),
-          },
-          rating: recipe.rating,
+  for (const recipe of recipes) {
+    const createdRecipe = await prisma.recipe.create({
+      data: {
+        title: recipe.title,
+        description: recipe.description,
+        imageUrl: recipe.imageUrl,
+        rating: recipe.rating,
+        ingredients: {
+          create: recipe.ingredients.map((ingredient) => ({
+            name: ingredient.name,
+            amount: ingredient.amount,
+          })),
         },
-      })
-    }
-
-    console.log("Seeding completed.")
+        tags: {
+          create: recipe.tags.map((tagName) => ({
+            tagId: tagMap[tagName],
+          })),
+        },
+        chiefs: {
+          create: recipe.chiefs.map((chiefName) => ({
+            chiefId: chiefMap[chiefName],
+          })),
+        },
+      },
+    })
   }
+
+  console.log("Seeding completed.")
+}
+
+
 
   main()
     .catch((e) => {
@@ -127,4 +134,4 @@ async function main() {
     .finally(async () => {
       await prisma.$disconnect()
     })
-}
+

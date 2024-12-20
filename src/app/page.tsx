@@ -1,21 +1,13 @@
-import Link from "next/link"
 import type { Metadata } from "next"
 import RecipeCard from "@/components/recipes/RecipeCard"
-import type { Recipe } from "@prisma/client"
 import HeroSection from "@/components/HeroSection"
+import { Recipe } from "./api/recipes/route"
 
 export const metadata: Metadata = {
   title: "Книга рецептов",
   description: "Книга рецептов. Делитесь любимыми рецептами и открывайте для себя новые",
 }
 
-// async function fetchRecipeById() {
-//   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/recipes/${process.env.NEXT_PUBLIC_MAIN_RECIPE_ID}`, { cache: "no-store" })
-//   if (!res.ok) {
-//     throw new Error("404")
-//   }
-//   return await res.json()
-// }
 
 async function fetchRecipeById(id: string) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/recipes/${id}`, { cache: "no-store" })
@@ -62,6 +54,8 @@ export default async function Home(): Promise<React.JSX.Element> {
               title={dailyRecipe.title}
               description={dailyRecipe.description}
               image={dailyRecipe.imageUrl}
+              tags={dailyRecipe.tags}
+              rating={dailyRecipe.rating}
               showIngredientsBtn
             />
           </div>

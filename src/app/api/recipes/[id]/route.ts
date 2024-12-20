@@ -27,13 +27,26 @@ export async function GET(request: Request, { params }: { params: { id: string }
   try {
     const recipe = await prisma.recipe.findFirst({
       where: { id: recipeId },
-      include: { ingredients: true },
-    })
+      include: {
+        ingredients: true,
+        tags: {
+          include: {
+            tag: true,
+          },
+        },
+      },
+    });
+
     if (!recipe) {
-      throw new Error("Рецепт не найден")
+      return NextResponse.json({ error: "Рецепт не найден" }, { status: 404 });
     }
 
-    return NextResponse.json(recipe)
+    const formattedRecipe = {
+      ...recipe,
+      tags: recipe.tags.map((recipeTag) => recipeTag.tag.name), // Преобразуем теги в массив строк
+    };
+
+    return NextResponse.json(formattedRecipe);
   } catch (error) {
     console.error(error)
     return NextResponse.json({ error: "Рецепт не найден" }, { status: 404 })
