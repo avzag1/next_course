@@ -63,7 +63,6 @@ export default function RecipeCard({ id, title, description, image, showIngredie
         />
         <h3 className="text-xl font-semibold text-gray-800 dark:text-white">{title}</h3>
         <p className="text-sm text-gray-700 dark:text-gray-400 mb-4">{description}</p>
-        <div className="border-b mb-4 border-gray-500"></div>
         <div className="text-sm text-gray-700 dark:text-gray-400 mb-4">{chiefs.map((chief) => chief.name).join(', ')}</div>
         
         <RecipeRating rating={rating} />

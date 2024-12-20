@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
-import RecipeCard from "@/components/recipes/RecipeCard"
+// import RecipeCard from "@/components/recipes/RecipeCard"
+import CardFlowbite from "@/components/recipes/CardFlowbite"
 import HeroSection from "@/components/HeroSection"
 import { Recipe } from "./api/recipes/route"
 
@@ -49,7 +50,7 @@ export default async function Home(): Promise<React.JSX.Element> {
         <>
           <h2 className="text-2xl mt-12 mb-4 font-semi">Рекомендуемый рецепт</h2>
           <div className="w-fit">
-            <RecipeCard
+            <CardFlowbite
               id={dailyRecipe.id}
               title={dailyRecipe.title}
               description={dailyRecipe.description}

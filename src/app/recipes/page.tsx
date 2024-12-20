@@ -1,5 +1,6 @@
 // import Image from "next/image"
-import RecipeCard from "@/components/recipes/RecipeCard"
+// import RecipeCard from "@/components/recipes/RecipeCard"
+import CardFlowbite from "@/components/recipes/CardFlowbite"
 import { Recipe } from "../api/recipes/route"
 
 async function fetchRecipes() {
@@ -18,7 +19,7 @@ export default async function RecipesPage() {
       <h1 className="text-3xl mb-6">Рецепты</h1>
       <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {recipes.map((recipe: Recipe) => (
-          <RecipeCard
+          <CardFlowbite
             key={recipe.id}
             id={recipe.id}
             title={recipe.title}

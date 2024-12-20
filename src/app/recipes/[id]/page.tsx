@@ -1,6 +1,7 @@
 // import Image from "next/image"
 import { Recipe } from "@/app/api/recipes/route"
-import RecipeCard from "@/components/recipes/RecipeCard"
+// import RecipeCard from "@/components/recipes/RecipeCard"
+import CardFlowbite from "@/components/recipes/CardFlowbite"
 
 import Link from "next/link"
 
@@ -26,7 +27,7 @@ export default async function RecipesPage({ params }: { params: { id: string } }
     <div className="container mx-auto p-4">
       <h1 className="text-3xl mb-6">{recipe.title}</h1>
       <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <RecipeCard
+        <CardFlowbite
           id={recipe.id}
           title={recipe.title}
           description={recipe.description}
