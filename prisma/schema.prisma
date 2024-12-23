@@ -14,13 +14,14 @@ datasource db {
 }
 
 model Recipe {
-  id          Int          @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   title       String
   description String
   imageUrl    String
   ingredients Ingredient[]
   tags        RecipeTag[]
   chiefs      RecipeChief[]
+  rating      Int           @default(0)
 }
 
 model Ingredient {
@@ -47,17 +48,17 @@ model RecipeTag {
 }
 
 model Chief {
-  id   Int    @id @default(autoincrement())
-  name String
-  bio  String
+  id      Int           @id @default(autoincrement())
+  name    String
+  bio     String?
   recipes RecipeChief[]
 }
 
 model RecipeChief {
   recipeId Int
   recipe   Recipe @relation(fields: [recipeId], references: [id])
-  chiefId    Int
-  chief      Chief    @relation(fields: [chiefId], references: [id])
+  chiefId  Int
+  chief    Chief  @relation(fields: [chiefId], references: [id])
+
   @@id([recipeId, chiefId])
 }
-
