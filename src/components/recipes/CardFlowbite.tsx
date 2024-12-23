@@ -56,6 +56,7 @@ export default function CardFlowbite({ id, title, description, image, showIngred
       <Card
         className="max-w-[340px]"
         renderImage={() => (
+          <Link href={`/recipes/${id}`}>
           <Image
             width={300}
             height={200}
@@ -63,6 +64,7 @@ export default function CardFlowbite({ id, title, description, image, showIngred
             alt={title}
             className="mb-4 rounded-lg mx-auto mt-5"
           />
+          </Link>
         )}
       >
         <Link href={`/recipes/${id}`}>
